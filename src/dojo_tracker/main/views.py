@@ -1,6 +1,10 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponseRedirect
+from django.contrib.auth.models import User
+from django.contrib.auth import login, authenticate
+from django.core.urlresolvers import reverse
+from django.conf import settings
 
 from datetime import date, timedelta
 import json
@@ -47,3 +51,10 @@ def entries_view(request, id=None):
     else:
         Entry.objects.create(user=request.user, date=data['date'][:10], count=data['count'])
     return JsonResponse({})
+
+
+def personal_view(request, token):
+    user = authenticate(username=token, password=settings.DEFAULT_USER_PASSWORD)
+    # TODO when user is None
+    login(request, user)
+    return HttpResponseRedirect(reverse('track'))

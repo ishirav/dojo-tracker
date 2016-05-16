@@ -125,3 +125,5 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "dojo_tracker", "static"),
 ]
+
+DEFAULT_USER_PASSWORD = '3]8fakiqy@#aZf'
