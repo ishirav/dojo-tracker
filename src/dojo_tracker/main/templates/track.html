@@ -1,0 +1,124 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div id="days-carousel" class="carousel slide" data-interval="0" data-wrap="false">
+
+    <!-- Wrapper for slides -->
+    <div class="carousel-inner" role="listbox">
+    </div>
+
+    <!-- Controls -->
+    <a class="left carousel-control" href="#days-carousel" role="button" data-slide="prev">
+        <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+        <span class="sr-only">Previous</span>
+    </a>
+    <a class="right carousel-control" href="#days-carousel" role="button" data-slide="next">
+        <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+        <span class="sr-only">Next</span>
+    </a>
+    
+</div>
+
+<script type="text/plain" id="entry-template">
+    <div class="day-wrap">
+      <div class="month"><%= model.getMonthName() %></div>
+      <div class="day"><%= model.getDay() %></div>
+      <div class="target">Tap once or more</div>
+    </div>
+</script>
+
+<script>
+
+    var Entry = Backbone.Model.extend({
+
+        months: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+
+        getDay: function() {
+            return this.get('date').getDate();
+        },
+
+        getMonthName: function() {
+            return this.months[this.get('date').getMonth()];
+        },
+
+        getCount: function() {
+            return this.get('count');
+        },
+
+        setCount: function(count) {
+            this.set('count', count);
+            this.save();
+        }
+
+    });
+
+    var Entries = Backbone.Collection.extend({
+
+        model: Entry,
+
+        url: '/entries'
+
+    });
+
+    var EntryView = Backbone.View.extend({
+
+        className: 'item',
+
+        template: _.template($('#entry-template').html()),
+
+        events: {
+            "click .target": "handleClick"
+        },
+
+        initialize: function() {
+            this.listenTo(this.model, "change", this.render);
+        },
+
+        render: function() {
+            this.$el.html(this.template({model: this.model}));
+            var count = this.model.getCount();
+            if (count) {
+                $('.target', this.$el).html('');
+                for (var i = 0; i < count; i++) {
+                    $('.target', this.$el).append('<i class="glyphicon glyphicon-ok"></i>');
+                }
+            }
+            return this.$el;
+        },
+
+        handleClick: function() {
+            var count = this.model.getCount();
+            count = (count + 1) % 4;
+            this.model.setCount(count);
+            this.show_feedback(count);
+        },
+
+        show_feedback: function(count) {
+            $('.feedback', this.$el).detach();
+            var feedbacks = ['', 'Great!', 'Awesome!', 'Amazing!'];
+            var text = feedbacks[count];
+            if (text) {
+                elem = $('<div/>').addClass('feedback').text(text);
+                this.$el.find('.day-wrap').append(elem);
+                elem.fadeOut(1500);
+            }
+        }
+
+    });
+
+    var entries = new Entries([
+        {% for e in entries %} 
+            new Entry({ id: {{ e.id|default:"null" }}, date: new Date('{{ e.date.isoformat }}'), count: {{ e.count }} }),
+        {% endfor %}
+    ]);
+
+    entries.each(function(entry) {
+        var view = new EntryView({model: entry});
+        $('.carousel-inner').append(view.render());
+    });
+    $('.carousel-inner .item:last-child').addClass('active');
+
+</script>
+
+{% endblock %}
