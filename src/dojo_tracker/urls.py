@@ -16,12 +16,13 @@ Including another URLconf
 from django.conf.urls import url
 from django.contrib import admin
 
-from dojo_tracker.main.views import track_view, entries_view, personal_view
+from dojo_tracker.main.views import *
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^track/$', track_view, name='track'),
+    url(r'^track$', track_view, name='track'),
     url(r'^entries$', entries_view),
     url(r'^entries/([0-9]+)$', entries_view),
+    url(r'^register$', register_view, name='register'),
     url(r'^([0-9a-zA-Z]+)$', personal_view, name='personal'),
 ]

@@ -37,7 +37,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'dojo_tracker.main'
+    'dojo_tracker.main',
+    'bootstrap3'
 ]
 
 MIDDLEWARE_CLASSES = [
@@ -127,3 +128,10 @@ STATICFILES_DIRS = [
 ]
 
 DEFAULT_USER_PASSWORD = '3]8fakiqy@#aZf'
+
+BOOTSTRAP3 = {
+    'set_placeholder': False
+}
+
+from local_settings import *
+

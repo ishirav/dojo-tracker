@@ -24,6 +24,7 @@
     <div class="day-wrap">
       <div class="month"><%= model.getMonthName() %></div>
       <div class="day"><%= model.getDay() %></div>
+      <div class="day-name"><%= model.getDayName() %></div>
       <div class="target">Tap once or more</div>
     </div>
 </script>
@@ -33,6 +34,7 @@
     var Entry = Backbone.Model.extend({
 
         months: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+        day_names: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
 
         getDay: function() {
             return this.get('date').getDate();
@@ -40,6 +42,10 @@
 
         getMonthName: function() {
             return this.months[this.get('date').getMonth()];
+        },
+
+        getDayName: function() {
+            return this.day_names[this.get('date').getDay()];
         },
 
         getCount: function() {
@@ -118,6 +124,15 @@
         $('.carousel-inner').append(view.render());
     });
     $('.carousel-inner .item:last-child').addClass('active');
+
+    // Support swipe gestures
+    $('#days-carousel').swipe({
+        swipe: function(event, direction, distance, duration, fingerCount, fingerData) {
+            if (direction == 'left') $(this).carousel('next');
+            if (direction == 'right') $(this).carousel('prev');
+        },
+        allowPageScroll: 'vertical'
+    });
 
 </script>
 

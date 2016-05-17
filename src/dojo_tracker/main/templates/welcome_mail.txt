@@ -1,0 +1,9 @@
+Hi {{ user.first_name}}!
+
+Thank you for joining Dojo Tracker. To return to the application in the future you
+have to use the personalized link below. Please bookmark it:
+
+{{ url }}
+
+
+Enjoy!

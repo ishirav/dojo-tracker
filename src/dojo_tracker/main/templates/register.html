@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% load bootstrap3 %}
+
+{% block content %}
+
+
+    <div class="row">
+        <div class="col-md-4">
+
+            <h1>Register</h1>
+
+            <form method="post" action="{% url "register" %}" autocomplete="off">
+                {% csrf_token %}
+                {% bootstrap_form form %}
+                {% buttons %}
+                    <button type="submit" class="btn btn-success btn-lg">Continue</button>
+                {% endbuttons %}
+            </form>
+
+        </div>
+    </div>
+
+
+{% endblock %}
