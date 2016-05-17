@@ -19,6 +19,7 @@ from django.contrib import admin
 from dojo_tracker.main.views import *
 
 urlpatterns = [
+    url(r'^$', home_view, name='home'),
     url(r'^admin/', admin.site.urls),
     url(r'^entries$', entries_view),
     url(r'^entries/([0-9]+)$', entries_view),

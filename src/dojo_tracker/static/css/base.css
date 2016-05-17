@@ -2,6 +2,10 @@ body {
     font-family: 'Montserrat', sans-serif;
 }
 
+.large {
+    font-size: 18px;
+}
+
 #days-carousel .item {
     font-size: 18px;
     text-align: center;

@@ -14,6 +14,12 @@ import json
 from models import Entry
 
 
+def home_view(request):
+    if request.user.is_authenticated():
+        return HttpResponseRedirect(reverse('track', args=[request.user.username]))
+    return render(request, 'home.html', locals())
+
+
 def _build_entries(user, start, end):
     entries = list(user.entry_set.filter(date__range=(start, end)))
     curr = start
@@ -74,7 +80,8 @@ def track_view(request, token):
     if token != request.user.username:
         logout(request)
         user = authenticate(username=token, password=settings.DEFAULT_USER_PASSWORD)
-        # TODO when user is None
+        if not user:
+            return HttpResponseRedirect(reverse('home'))
         login(request, user)
     entries = _get_entries(request.user)
     return render(request, 'track.html', locals())
