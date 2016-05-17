@@ -20,9 +20,8 @@ from dojo_tracker.main.views import *
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^track$', track_view, name='track'),
     url(r'^entries$', entries_view),
     url(r'^entries/([0-9]+)$', entries_view),
     url(r'^register$', register_view, name='register'),
-    url(r'^([0-9a-zA-Z]+)$', personal_view, name='personal'),
+    url(r'^([0-9a-zA-Z]{8})$', track_view, name='track'),
 ]

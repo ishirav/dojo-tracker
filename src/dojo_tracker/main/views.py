@@ -2,7 +2,7 @@ from django.shortcuts import render, get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse, HttpResponseRedirect
 from django.contrib.auth.models import User
-from django.contrib.auth import login, authenticate
+from django.contrib.auth import login, logout, authenticate
 from django.core.urlresolvers import reverse
 from django.conf import settings
 from django import forms
@@ -38,11 +38,6 @@ def _get_entries(user):
     return list(_build_entries(user, start, end))
 
 
-def track_view(request):
-    entries = _get_entries(request.user)
-    return render(request, 'track.html', locals())
-
-
 @csrf_exempt
 def entries_view(request, id=None):
     data = json.load(request)
@@ -68,18 +63,21 @@ def register_view(request):
         username = _generate_username()
         kwargs = dict(form.cleaned_data, password=settings.DEFAULT_USER_PASSWORD)
         user = User.objects.create_user(username, **kwargs)
-        url = request.build_absolute_uri(reverse('personal', args=[username]))
+        url = request.build_absolute_uri(reverse('track', args=[username]))
         msg = render_to_string('welcome_mail.txt', dict(user=user, url=url))
         user.email_user('Welcome to Dojo Tracker', msg)
-        return HttpResponseRedirect(reverse('track')) # TODO redirect to welcome page
+        return HttpResponseRedirect(reverse('track', args=[username])) # TODO redirect to welcome page
     return render(request, 'register.html', locals())
 
 
-def personal_view(request, token):
-    user = authenticate(username=token, password=settings.DEFAULT_USER_PASSWORD)
-    # TODO when user is None
-    login(request, user)
-    return HttpResponseRedirect(reverse('track'))
+def track_view(request, token):
+    if token != request.user.username:
+        logout(request)
+        user = authenticate(username=token, password=settings.DEFAULT_USER_PASSWORD)
+        # TODO when user is None
+        login(request, user)
+    entries = _get_entries(request.user)
+    return render(request, 'track.html', locals())
 
 
 class RegistrationForm(forms.Form):
