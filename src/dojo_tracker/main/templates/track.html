@@ -25,7 +25,7 @@
       <div class="month"><%= model.getMonthName() %></div>
       <div class="day"><%= model.getDay() %></div>
       <div class="day-name"><%= model.getDayName() %></div>
-      <div class="target">Tap once or more</div>
+      <a class="target">Tap once or more</a>
     </div>
 </script>
 
@@ -126,7 +126,7 @@
     $('.carousel-inner .item:last-child').addClass('active');
 
     // Support swipe gestures
-    $('#days-carousel').swipe({
+    $('#days-carousel').parent().swipe({
         swipe: function(event, direction, distance, duration, fingerCount, fingerData) {
             if (direction == 'left') $(this).carousel('next');
             if (direction == 'right') $(this).carousel('prev');
