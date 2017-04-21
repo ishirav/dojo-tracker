@@ -26,6 +26,12 @@ Syntax highlighted code block
 [Link](url) and ![Image](src)
 ```
 
+``` python
+with open('test', 'rb') as f:
+  for line in f:
+    print line
+```
+
 [Another page](TEST.md)
 
 For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
